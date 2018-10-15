@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/***************************************************************************************
+/**************************************************************************************
  *  
  *  Utilidad: Permite la escritura de bytes hacia un archivo 
  *  		  de salida, cuyo path se proporciona.

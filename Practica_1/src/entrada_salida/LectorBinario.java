@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-/***************************************************************************************
+/**************************************************************************************
  *  
  *  Utilidad: Permite la lectura de palabras de 8 bits de un archivo de entrada, cuyo
  *  		  path se proporciona.

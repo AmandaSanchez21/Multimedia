@@ -7,7 +7,7 @@ import entrada_salida.EscritorBinario;
 import entrada_salida.LectorBinario;
 import estructuras_datos.ArbolHuffman;
 
-/*********************************************************************************************
+/********************************************************************************************
  *  Ejecución: 
  *  	% Comprimir:    java PlantillaCodificacionHuffman -c filePathIn filePathOut
  *      % Decomprimir:  java PlantillaCodificacionHuffman -d filePathIn filePathOut

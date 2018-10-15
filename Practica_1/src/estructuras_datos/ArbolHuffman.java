@@ -1,6 +1,6 @@
 package estructuras_datos;
 
-/***************************************************************************************
+/**************************************************************************************
  *  
  *  ArbolHuffman: Estructura de datos recursiva para representar un árbol binario
  *  de Huffman. 
