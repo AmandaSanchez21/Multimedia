@@ -20,6 +20,8 @@ import estructuras_datos.ArbolHuffman;
 
 public class PlantillaCodificacionHuffman {
 	
+	private Hashtable<Character,String> diccionarioCodigos = new Hashtable<Character,String>();;
+
 	// Constructor
 	private PlantillaCodificacionHuffman(){
 		
@@ -61,10 +63,10 @@ public class PlantillaCodificacionHuffman {
 		// Construir diccionario de búsqueda -> Pares (símbolo,código).
 		// diccionarioCodigos será una estructura de tipo Map, Hashtable, String[], ...,
 		// dependiendo de la implementación elegida.
-        // construirCodigos(diccionarioCodigos,arbol,"");
+        construirCodigos(diccionarioCodigos,arbol,"");
 		
 		// Codificar la trama (char[]input) usando el diccionario de códigos.
-        // codificar(input,diccionarioCodigos,filePathOut,arbol);
+        codificar(input,diccionarioCodigos,filePathOut,arbol);
 	}
 	
    /* 
@@ -119,15 +121,21 @@ public class PlantillaCodificacionHuffman {
  			char key = keys.nextElement().charValue();
  			ArbolHuffman arbol = new ArbolHuffman(key, freq.get(key), null, null);
  			arboles.add(arbol);
- 			System.out.println(arbol.toString());
+ 			//System.out.println(arbol.toString());
  		}
     	///////////////////////TAREA1.4///////////////////////
     	
         //////////////////////////////////////////////////////  
+ 		while(arboles.size() != 1) {
+ 			ArbolHuffman subarbol1 = arboles.poll();
+ 			ArbolHuffman subarbol2 = arboles.poll();
+ 			ArbolHuffman arbolete = new ArbolHuffman('\0', subarbol1.getFrecuencia() + subarbol2.getFrecuencia(), subarbol1, subarbol2);
+ 			arboles.add(arbolete);
+ 		}
     	
  		// Sustituir este objeto retornando el árbol de Huffman final 
  		// construido en la TAREA1.4
-     	return new ArbolHuffman(); 
+     	return arboles.poll(); 
  	}
  	
    /* 
@@ -151,11 +159,23 @@ public class PlantillaCodificacionHuffman {
     * Construir diccionario de búsqueda -> Pares (símbolo,código).
     * (Si se usa una estructura Map para albergar el diccionario de códigos).
     */
-    private void construirCodigos(Map<Character,String>  diccionarioCodigos, ArbolHuffman arbol,String codigoCamino){
+    private void construirCodigos(Hashtable<Character,String> diccionarioCodigos, ArbolHuffman arbol,String codigoCamino){
     	
     	///////////////////////TAREA1.5///////////////////////
 
         //////////////////////////////////////////////////////
+    		if(!arbol.esHoja()) {
+    			if(arbol.getIzquierdo() != null) {
+    				codigoCamino += '0';
+    				construirCodigos(diccionarioCodigos, arbol.getIzquierdo(), codigoCamino);
+    			}
+    			if(arbol.getDerecho() != null) {
+    				codigoCamino += '1';
+    				construirCodigos(diccionarioCodigos, arbol.getDerecho(), codigoCamino);    				
+    			}
+    		} else {
+        		diccionarioCodigos.put(arbol.getSimbolo(), codigoCamino);
+    		}
     }
     
    /* 
@@ -186,7 +206,7 @@ public class PlantillaCodificacionHuffman {
     * archivo de salida cuyo path (String filePathOut) se facilita como argumento.
     * (Si se usa una estructura Map para albergar el diccionario de códigos).
     */
-    private void codificar(char[] input, Map<Character,String> diccionarioCodigos, String filePathOut, ArbolHuffman arbol){
+    private void codificar(char[] input, Hashtable<Character,String> diccionarioCodigos, String filePathOut, ArbolHuffman arbol){
     	
     	EscritorBinario escritor = new EscritorBinario(filePathOut);
     	
@@ -200,7 +220,16 @@ public class PlantillaCodificacionHuffman {
         // Codificación usando el diccionario de códigos y escritura en el archivo de salida. 
         
         //////////////////////////////////////////////////////
-        
+        for(int i = 0; i < input.length; i++) {
+        			String codigo = diccionarioCodigos.get(input[i]);
+        			for(int j = 0; j < codigo.length(); j++) {
+        				if(codigo.charAt(j) == '0') {
+                			escritor.escribirBit(false);
+        				} else if(codigo.charAt(j) == '1') {
+        					escritor.escribirBit(true);
+        				}
+        		}
+        }
     	escritor.cerrarFlujo();
     }
     
