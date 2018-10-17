@@ -299,7 +299,7 @@ public class PlantillaCodificacionHuffman {
 			if(args[0].equals("-c")){
 				huffman.comprimir(args[1],args[2]);
 			}else if (args[0].equals("-d")){
-
+				huffman.descomprimir(args[1], args[2]);
 			}
 		}
 	}
