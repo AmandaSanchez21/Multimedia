@@ -166,12 +166,11 @@ public class PlantillaCodificacionHuffman {
         //////////////////////////////////////////////////////
     		if(!arbol.esHoja()) {
     			if(arbol.getIzquierdo() != null) {
-    				codigoCamino += '0';
-    				construirCodigos(diccionarioCodigos, arbol.getIzquierdo(), codigoCamino);
+    				construirCodigos(diccionarioCodigos, arbol.getIzquierdo(), codigoCamino+'0');
     			}
     			if(arbol.getDerecho() != null) {
-    				codigoCamino += '1';
-    				construirCodigos(diccionarioCodigos, arbol.getDerecho(), codigoCamino);    				
+    				//codigoCamino += '1';
+    				construirCodigos(diccionarioCodigos, arbol.getDerecho(), codigoCamino+'1');    				
     			}
     		} else {
         		diccionarioCodigos.put(arbol.getSimbolo(), codigoCamino);
