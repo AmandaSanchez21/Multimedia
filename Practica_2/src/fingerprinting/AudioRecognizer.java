@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
@@ -141,11 +142,11 @@ public class AudioRecognizer {
 						int counter = 0;
 						// Now, focus on the matchMap hashtable:
 						// If songId (extracted from the current keypoint) has not been found yet in the matchMap add it
-						if(!matchMap.containsKey(songId)) {
+						if(!matchMap.containsKey(list.get(i).getSongId())) {
 							// ...
 							matchedSong = new HashMap<Integer,Integer>();
 							matchedSong.put(offset, 1);
-							matchMap.put(songId, matchedSong);
+							matchMap.put(list.get(i).getSongId(), matchedSong);
 							// (else) songId has been added in a past chunk
 						} else {
 							// If this is the first time the computed offset appears for this particular songId
@@ -158,6 +159,9 @@ public class AudioRecognizer {
 								// ...
 								matchedSong.put(offset, 1);
 							}
+						}
+						if(counter > 1) {
+							System.out.println("Offset: " + offset + ", counter: " + counter);
 						}
 					}
 				}
@@ -204,13 +208,26 @@ public class AudioRecognizer {
 
 	// Method to find the songId with the most frequently/repeated time offset
 	private void showBestMatching(Map<String, Map<Integer,Integer>> matchMap) {
+		
+		int freq;
+		int maxFreq = 0;
+		String selectedSong = null;
+		
 		// Iterate over the songs in the hashtable used for matching (matchMap)
 		// ...
-		for(int i = 0; i < matchMap.size(); i++)
-		// (For each song) Iterate over the nested hashtable Map<offset,count>
-		// Get the biggest offset for the current song and update (if necessary)
-		// the best overall result found till the current iteration
-
+		for (Map.Entry<String, Map<Integer, Integer>> songs : matchMap.entrySet()) {
+			// (For each song) Iterate over the nested hashtable Map<offset,count>
+			for (Entry<Integer, Integer> song : songs.getValue().entrySet()) {
+				// Get the biggest offset for the current song and update (if necessary)
+				// the best overall result found till the current iteration
+				freq = song.getValue();
+				if(freq >= maxFreq) {
+					maxFreq = freq;
+					selectedSong = songs.getKey();
+				}
+			}
+		}
+		
 		// Print the songId string which represents the best matching     
 		System.out.println("Best song: ");
 	}
