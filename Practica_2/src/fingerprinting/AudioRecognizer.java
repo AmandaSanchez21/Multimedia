@@ -112,41 +112,42 @@ public class AudioRecognizer {
 			Long entry = computeHashEntry(magnitudeSpectrum[c]);
 
 			// ... Esto porque me apetece ponerlo aqui, pero si no funciona hay que bajarlo donde el hashMapSongRepository
-			List<KeyPoint> list = new ArrayList<KeyPoint>();
+			List<KeyPoint> keyPointsList;
 
 			// In the case of adding the song to the repository
 			if (!isMatching) { 
 				// ...
-				if(!hashMapSongRepository.containsKey(entry)) {
-					hashMapSongRepository.put(entry, list);
+				if((keyPointsList = hashMapSongRepository.get(entry)) == null) {
+					keyPointsList = new ArrayList<KeyPoint>();
+					hashMapSongRepository.put(entry, keyPointsList);
 				}
 
 				// Adding keypoint to the list in its relative hash entry which has been computed before
 				// ...
 				KeyPoint point = new KeyPoint(songId, c);
 				// ...
-				list.add(point);
+				keyPointsList.add(point);
 			}
 			// In the case of matching a song fragment
 			else {
-				list = hashMapSongRepository.get(entry);
-				if(list != null) {
+				keyPointsList = hashMapSongRepository.get(entry);
+				if(keyPointsList != null) {
 					// Iterate over the list of keypoints that matches the hash entry
 					// in the the current chunk
-					for(int i = 0; i < list.size(); i++) {
+					for(int i = 0; i < keyPointsList.size(); i++) {
 						// For each keypoint:
 						// Compute the time offset (Math.abs(point.getTimestamp() - c))
 						// ...
-						Map<Integer,Integer> matchedSong = matchMap.get(list.get(i).getSongId());
-						int offset = Math.abs(list.get(i).getTimestamp() - c);
+						Map<Integer,Integer> matchedSong = matchMap.get(keyPointsList.get(i).getSongId());
+						int offset = Math.abs(keyPointsList.get(i).getTimestamp() - c);
 						int counter = 0;
 						// Now, focus on the matchMap hashtable:
 						// If songId (extracted from the current keypoint) has not been found yet in the matchMap add it
-						if(!matchMap.containsKey(list.get(i).getSongId())) {
+						if(!matchMap.containsKey(keyPointsList.get(i).getSongId())) {
 							// ...
 							matchedSong = new HashMap<Integer,Integer>();
 							matchedSong.put(offset, 1);
-							matchMap.put(list.get(i).getSongId(), matchedSong);
+							matchMap.put(keyPointsList.get(i).getSongId(), matchedSong);
 							// (else) songId has been added in a past chunk
 						} else {
 							// If this is the first time the computed offset appears for this particular songId
@@ -229,6 +230,6 @@ public class AudioRecognizer {
 		}
 		
 		// Print the songId string which represents the best matching     
-		System.out.println("Best song: ");
+		System.out.println("Best song: " + selectedSong);
 	}
 }
